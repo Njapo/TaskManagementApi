@@ -16,11 +16,20 @@ namespace TaskManagementApi
                 .ForMember(dest => dest.ProgressPercentage, opt =>
                     opt.MapFrom(src => CalculateProgressPersentage(src)))
                 .ForMember(dest=>dest.Warning,opt=>
-                    opt.MapFrom(src=>src.EndDate<src.StartDate));
+                    opt.MapFrom(src=>warningMessage(src)));
 
             CreateMap<ProjectTask,ProjectTaskCreateDTO>().ReverseMap();
             CreateMap<ProjectTask, ProjectTaskUpdateDTO>().ReverseMap();
             CreateMap<LocalUser,RegistrationRequestDTO>().ReverseMap();
+        }
+
+        private string warningMessage(ProjectTask task)
+        {
+            if (task.EndDate < DateTime.Now)
+            {
+                return "Task was Late!!!!";
+            }
+            return "";
         }
 
         private double CalculateProgressPersentage(ProjectTask dto)
